@@ -6,15 +6,8 @@ The impetus for this project was [this discussion](https://github.com/greenelab/
 
 # License
 
-The data files in this repository are released under the CC0 1.0 public domain dedication ([`LICENSE-CC0.md`](LICENSE-CC0.md)).
-These include files matched by the following glob patterns:
-
-- `*.tsv`
-- `*.sqlite`
-- `*.xml`
-
-The source code in this repository is released under a BSD 3-Claue license ([`LICENSE-BSD-3-CLAUSE.md`](LICENSE-BSD-3-CLAUSE.md)).
-These include files matched by the following glob patterns:
+The files in this repository are released under the CC0 1.0 public domain dedication ([`LICENSE-CC0.md`](LICENSE-CC0.md)), excepting those that match the glob patterns listed below.
+Files matching the following glob patters are instead released under a BSD 3-Claue license ([`LICENSE-BSD-3-CLAUSE.md`](LICENSE-BSD-3-CLAUSE.md)):
 
 - `*.py`
 - `*.md`
