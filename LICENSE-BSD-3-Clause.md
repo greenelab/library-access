@@ -1,6 +1,6 @@
 # The 3-Clause BSD License
 
-Copyright 2017 the contributors
+Copyright 2017 the Contributors and the Trustees of the University of Pennsylvania
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
