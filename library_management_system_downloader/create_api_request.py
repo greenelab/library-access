@@ -32,7 +32,7 @@ def create_api_request(
     # Update the static api parameters to include the (dynamic) DOI:
     api_request_parameters = static_api_request_parameters_dictionary
     api_request_parameters.update({
-            'rft_id': 'info:doi/%s' % item_doi})
+            'rft_id': f'info:doi/{item_doi}'})
 
     api_response = requests.get(
             api_base_url,
@@ -46,6 +46,6 @@ def create_api_request(
         raise ErrorWithAPI('Problem contacting API: {}'.format(
                 api_response.status_code))
 
-    logging.info('Returning query results from URL "%s"' % api_response.url)
+    logging.info(f'Returning query results from URL "{api_response.url}"')
 
     return api_response

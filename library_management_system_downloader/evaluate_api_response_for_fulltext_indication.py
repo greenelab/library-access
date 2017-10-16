@@ -17,10 +17,8 @@ def fulltext_indication(api_response_xml):
             id='full_text_indicator')
 
     logging.info(
-          'The value for the "full_text_indicator" key for doi "%(doi)s" is '
-          '"%(value)s".' % {
-                  'doi': doi_value,
-                  'value': full_text_indicator_value})
+          f'The value for the "full_text_indicator" key for doi "{doi_value}" '
+          'is "full_text_indicator_value".')
 
     if(full_text_indicator_value is not None and
        full_text_indicator_value.string == 'true'):

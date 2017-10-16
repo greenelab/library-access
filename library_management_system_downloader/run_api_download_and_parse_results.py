@@ -123,15 +123,14 @@ def insert_a_doi_database_record(
                     dois_table.c.doi == doi).first()
 
     if doi_foreign_key is None:
-        logging.info('Inserting DOI "%s" into the database...' % doi)
+        logging.info(f'Inserting DOI "{doi}" into the database...')
         inserted_doi = dois_table_insert.execute(doi=doi)
         # Get the foreign key we just inserted into the database:
         doi_foreign_key = inserted_doi.inserted_primary_key[0]
     else:
         doi_foreign_key = doi_foreign_key[0]
-        logging.info('DOI "%s" is already in the database (foreign key "%i"), '
-                     'so not inserting it...'
-                     % (doi, doi_foreign_key))
+        logging.info(f'DOI "{doi}" is already in the database (foreign key '
+                     '"{doi_foreign_key}"), so not inserting it...')
 
     # Insert the new XML record:
     logging.info('Inserting holdings record into database...')
