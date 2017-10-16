@@ -23,11 +23,10 @@ def create_api_request(
 
     if static_api_request_parameters_dictionary is None:
         static_api_request_parameters_dictionary = {}
-    if custom_user_agent_string is None:
-        custom_user_agent_string = ""
 
-    custom_api_query_header = {
-            'user-agent': custom_user_agent_string}
+    custom_api_query_header = {}
+    if custom_user_agent_string:
+        custom_api_query_header['user-agent'] = custom_user_agent_string
 
     # Update the static api parameters to include the (dynamic) DOI:
     api_request_parameters = static_api_request_parameters_dictionary
