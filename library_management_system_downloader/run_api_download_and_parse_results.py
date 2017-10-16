@@ -163,9 +163,9 @@ for doi in list_of_dois[0:10]:
     if (config.rerun_dois_that_are_already_in_database is not True and
             is_doi_already_answered_in_database(doi) is True):
             logging.info(
-                    'DOI is already in the database with a fulltext answer. '
-                    'config.rerun_dois_that_are_already_in_database is not '
-                    'True. Therefore, moving on to the next DOI...')
+                    f'DOI "{doi}" is already in the database with a fulltext '
+                    'answer. config.rerun_dois_that_are_already_in_database '
+                    'is not True. Therefore, moving on to the next DOI...')
     else:
         # I'm leaving this here as an example to make manual debugging
         # easier:
