@@ -130,8 +130,8 @@ def insert_a_doi_database_record(
     else:
         doi_foreign_key = doi_foreign_key[0]
         logging.info('DOI "%s" is already in the database (foreign key "%i"), '
-              'so not inserting it...'
-              % (doi, doi_foreign_key))
+                     'so not inserting it...'
+                     % (doi, doi_foreign_key))
 
     # Insert the new XML record:
     logging.info('Inserting holdings record into database...')
