@@ -3,7 +3,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy import event
 from sqlalchemy import Table, MetaData, Column, String, DateTime, Integer, func
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, distinct
 from sqlalchemy.orm import sessionmaker
 
 # =============================================================================
@@ -40,7 +40,7 @@ logging.basicConfig(level=logging.INFO)
 # instead of logging.info for now. Changing this is a TODO item.
 
 # =============================================================================
-# Set up a connection to (and table within) an SQLite database:
+# Set up a connection to (and tables within) an SQLite database:
 # =============================================================================
 
 # Initialize the database:
@@ -69,7 +69,7 @@ metadata = MetaData(sql_engine)
 dois_table = Table(
         'dois_table', metadata,
         Column('database_id', Integer, primary_key=True),
-        Column('doi', String, nullable=False, unique=True))
+        Column('doi', String, nullable=False, unique=True, index=True))
 
 library_holdings_table = Table(
         'library_holdings_data', metadata,
@@ -132,19 +132,32 @@ def insert_a_doi_database_record(
 # Import the datset into
 doi_dataset = pd.read_csv(config.tsv_dataset_location, sep='\t', header=0)
 
-list_of_dois = doi_dataset[doi_dataset['oadoi_color'] == 'closed']['doi']
+# Set will get unique values in the list:
+list_of_dois = list(set(
+        doi_dataset[doi_dataset['oadoi_color'] == 'closed']['doi']))
 # len(list_of_dois)
 
-# Eliminate any DOIs for which we already have an answer (in the SQLite
-# database)
-# NOTE: I am making the assumption here that if a DOI is in the database, it
-# also
+# Eliminate any DOIs for which we already have an answer in the SQLite
+# database
 # dois_already_in_database = pd.read_sql(
 #         """
 #         SELECT doi
 #         FROM library_holdings_data
 #         WHERE full_text_indicator IS NOT NULL""",
 #         sql_engine).doi
+dois_with_existing_answers = sql_session.query(distinct(
+        dois_table.c.doi)).join(library_holdings_table).filter(
+                library_holdings_table.c.full_text_indicator.isnot(
+                        None)).filter(
+                                dois_table.c.doi.in_(
+                                        str(list_of_dois)
+                                        )).all()
+
+
+sql_session.query(distinct(
+        dois_table.c.doi)).join(library_holdings_table).filter(
+                library_holdings_table.c.full_text_indicator.isnot(
+                        None)).join(['1', '2', '3'], isouter=True)
 
 # =============================================================================
 # Query the API
