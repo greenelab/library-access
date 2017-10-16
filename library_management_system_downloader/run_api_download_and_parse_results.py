@@ -92,6 +92,40 @@ dois_table_insert = dois_table.insert()
 holdings_table_insert = library_holdings_table.insert()
 
 # =============================================================================
+# Define a function for inserting into the database
+# =============================================================================
+
+Session = sessionmaker(bind=sql_engine)
+sql_session = Session()
+
+
+def insert_a_doi_database_record(
+        doi,
+        api_response_text,
+        full_text_indicator_for_doi,
+        sqlalchemy_session=sql_session):
+    doi_foreign_key = sql_session.query(dois_table.c.database_id).filter(
+            dois_table.c.doi == doi).first()
+
+    if doi_foreign_key is None:
+        print('Inserting DOI "%s" into the database...' % doi)
+        inserted_doi = dois_table_insert.execute(doi=doi)
+        # Get the foreign key we just inserted into the database:
+        doi_foreign_key = inserted_doi.inserted_primary_key[0]
+    else:
+        doi_foreign_key = doi_foreign_key[0]
+        print('DOI "%s" is already in the database (foreign key "%i"), '
+              'so not inserting it...'
+              % (doi, doi_foreign_key))
+
+    # Insert the new XML record:
+    print('Inserting holdings record into database...')
+    holdings_table_insert.execute(
+            doi_foreign_key=doi_foreign_key,
+            xml_response=api_response_text,
+            full_text_indicator=full_text_indicator_for_doi)
+
+# =============================================================================
 # Import the list of DOIs
 # =============================================================================
 
@@ -133,30 +167,13 @@ test_response = api.create_api_request(
 full_text_indicator_for_doi = \
     fulltext.fulltext_indication(test_response.text)
 
+
 # =============================================================================
 # Insert a record into the SQLite table
 # =============================================================================
 
-Session = sessionmaker(bind=sql_engine)
-sql_session = Session()
-
-doi_foreign_key = sql_session.query(dois_table.c.database_id).filter(
-        dois_table.c.doi == doi).first()
-
-if doi_foreign_key is None:
-    print('Inserting DOI "%s" into the database...' % doi)
-    inserted_doi = dois_table_insert.execute(doi=doi)
-    doi_foreign_key = inserted_doi.inserted_primary_key[0]
-else:
-    print('DOI "%s" is already in the database (foreign key "%i"), '
-          'so not inserting it...'
-          % (doi, doi_foreign_key))
-
-# Insert the new XML record:
-holdings_table_insert.execute(
-        doi_foreign_key=doi_foreign_key,
-        xml_response=test_response.text,
-        full_text_indicator=full_text_indicator_for_doi)
+insert_a_doi_database_record(doi, test_response.text,
+                             full_text_indicator_for_doi)
 
 # An example of re-joining the two tables:
 # sql_session.query(
