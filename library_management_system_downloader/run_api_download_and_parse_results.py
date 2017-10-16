@@ -151,10 +151,16 @@ else:
     print('DOI "%s" is already in the database (foreign key "%i"), '
           'so not inserting it...'
           % (doi, doi_foreign_key))
-# .all()
-# .join(Country).filter(User.user_email == 'abc@def.com').first()
 
+# Insert the new XML record:
 holdings_table_insert.execute(
         doi_foreign_key=doi_foreign_key,
         xml_response=test_response.text,
         full_text_indicator=full_text_indicator_for_doi)
+
+# An example of re-joining the two tables:
+# sql_session.query(
+#         dois_table.c.doi,
+#         library_holdings_table.c.timestamp,
+#         library_holdings_table.c.full_text_indicator).join(
+#                 library_holdings_table).all()
