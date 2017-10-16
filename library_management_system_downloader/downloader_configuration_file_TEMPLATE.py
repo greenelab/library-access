@@ -14,3 +14,5 @@ api_base_url = (
             'https://example.com/openurl')
 
 tsv_dataset_location = '/path/to/dois.tsv'
+
+rerun_dois_that_are_already_in_database = False

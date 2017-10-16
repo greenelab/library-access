@@ -35,10 +35,6 @@ from library_management_system_downloader \
 
 logging.basicConfig(level=logging.INFO)
 
-#  TODO: Because iPython in Spyder seems to have a bug whereby logging.info()
-# is not output, even with basicConfig set below, I've used print() below
-# instead of logging.info for now. Changing this is a TODO item.
-
 # =============================================================================
 # Set up a connection to (and tables within) an SQLite database:
 # =============================================================================
@@ -92,11 +88,29 @@ dois_table_insert = dois_table.insert()
 holdings_table_insert = library_holdings_table.insert()
 
 # =============================================================================
-# Define a function for inserting into the database
+# Define functions for querying and inserting into the database
 # =============================================================================
 
 Session = sessionmaker(bind=sql_engine)
 sql_session = Session()
+
+
+def is_doi_already_answered_in_database(
+        doi,
+        sqlalchemy_session=sql_session):
+    existing_doi_with_fulltext_anwer = sql_session.query(distinct(
+        dois_table.c.doi)).join(library_holdings_table).filter(
+            dois_table.c.doi == doi).filter(
+                    library_holdings_table.c.full_text_indicator.isnot(
+                            None)).first()
+
+    if existing_doi_with_fulltext_anwer is None:
+        return False
+    else:
+        return True
+
+# Example invocation:
+# is_doi_already_answered_in_database('10.1001/2012.jama.10139')
 
 
 def insert_a_doi_database_record(
@@ -104,22 +118,23 @@ def insert_a_doi_database_record(
         api_response_text,
         full_text_indicator_for_doi,
         sqlalchemy_session=sql_session):
-    doi_foreign_key = sql_session.query(dois_table.c.database_id).filter(
-            dois_table.c.doi == doi).first()
+    doi_foreign_key = sql_session.query(
+            distinct(dois_table.c.database_id)).filter(
+                    dois_table.c.doi == doi).first()
 
     if doi_foreign_key is None:
-        print('Inserting DOI "%s" into the database...' % doi)
+        logging.info('Inserting DOI "%s" into the database...' % doi)
         inserted_doi = dois_table_insert.execute(doi=doi)
         # Get the foreign key we just inserted into the database:
         doi_foreign_key = inserted_doi.inserted_primary_key[0]
     else:
         doi_foreign_key = doi_foreign_key[0]
-        print('DOI "%s" is already in the database (foreign key "%i"), '
+        logging.info('DOI "%s" is already in the database (foreign key "%i"), '
               'so not inserting it...'
               % (doi, doi_foreign_key))
 
     # Insert the new XML record:
-    print('Inserting holdings record into database...')
+    logging.info('Inserting holdings record into database...')
     holdings_table_insert.execute(
             doi_foreign_key=doi_foreign_key,
             xml_response=api_response_text,
@@ -137,60 +152,51 @@ list_of_dois = list(set(
         doi_dataset[doi_dataset['oadoi_color'] == 'closed']['doi']))
 # len(list_of_dois)
 
-# Eliminate any DOIs for which we already have an answer in the SQLite
-# database
-# dois_already_in_database = pd.read_sql(
-#         """
-#         SELECT doi
-#         FROM library_holdings_data
-#         WHERE full_text_indicator IS NOT NULL""",
-#         sql_engine).doi
-dois_with_existing_answers = sql_session.query(distinct(
-        dois_table.c.doi)).join(library_holdings_table).filter(
-                library_holdings_table.c.full_text_indicator.isnot(
-                        None)).filter(
-                                dois_table.c.doi.in_(
-                                        str(list_of_dois)
-                                        )).all()
-
-
-sql_session.query(distinct(
-        dois_table.c.doi)).join(library_holdings_table).filter(
-                library_holdings_table.c.full_text_indicator.isnot(
-                        None)).join(['1', '2', '3'], isouter=True)
+# Note that we will use config.rerun_dois_that_are_already_in_database to
+# determine below whether to re-run DOIs that already have an answer in the
+# database.
 
 # =============================================================================
 # Query the API
 # =============================================================================
 
-doi = '10.1001/2012.jama.10139'
+for doi in list_of_dois[0:2]:
+    if (config.rerun_dois_that_are_already_in_database is not True and
+            is_doi_already_answered_in_database(doi) is True):
+            logging.info(
+                    'DOI is already in the database with a fulltext answer. '
+                    'config.rerun_dois_that_are_already_in_database is not '
+                    'True. Therefore, moving on to the next DOI...')
+    else:
+        # I'm leaving this here as an example to make manual debugging
+        # easier:
+        # doi = '10.1001/2012.jama.10139'
 
-test_response = api.create_api_request(
-        doi,
-        api_base_url=config.api_base_url,
-        static_api_request_parameters_dictionary=config.
-        static_parameters_for_api,
-        custom_user_agent_string=config.user_agent_custom_string)
+        api_response = api.create_api_request(
+                doi,
+                api_base_url=config.api_base_url,
+                static_api_request_parameters_dictionary=config.
+                static_parameters_for_api,
+                custom_user_agent_string=config.user_agent_custom_string)
 
-# Demonstrating how to interact with the test_response:
-# test_response.url
-# test_response.status_code
-# test_response.text
+        # Demonstrating how to interact with the api_response:
+        # api_response.url
+        # api_response.status_code
+        # api_response.text
 
-full_text_indicator_for_doi = \
-    fulltext.fulltext_indication(test_response.text)
+        full_text_indicator_for_doi = \
+            fulltext.fulltext_indication(api_response.text)
 
+        # =====================================================================
+        # Insert a record into the SQLite table
+        # =====================================================================
 
-# =============================================================================
-# Insert a record into the SQLite table
-# =============================================================================
+        insert_a_doi_database_record(doi, api_response.text,
+                                     full_text_indicator_for_doi)
 
-insert_a_doi_database_record(doi, test_response.text,
-                             full_text_indicator_for_doi)
-
-# An example of re-joining the two tables:
-# sql_session.query(
-#         dois_table.c.doi,
-#         library_holdings_table.c.timestamp,
-#         library_holdings_table.c.full_text_indicator).join(
-#                 library_holdings_table).all()
+        # An example of re-joining the two tables:
+        # sql_session.query(
+        #         dois_table.c.doi,
+        #         library_holdings_table.c.timestamp,
+        #         library_holdings_table.c.full_text_indicator).join(
+        #                 library_holdings_table).all()

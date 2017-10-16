@@ -1,10 +1,6 @@
 from bs4 import BeautifulSoup
 import logging
 
-#  TODO: Because iPython in Spyder seems to have a bug whereby logging.info()
-# is not output, even with basicConfig set below, I've used print() below
-# instead of logging.info for now. Changing this is a TODO item.
-
 
 def fulltext_indication(api_response_xml):
     """Given XML from an API response, determine whether fulltext is available
@@ -20,7 +16,7 @@ def fulltext_indication(api_response_xml):
     full_text_indicator_value = parseable_response_xml.find(
             id='full_text_indicator')
 
-    print(
+    logging.info(
           'The value for the "full_text_indicator" key for doi "%(doi)s" is '
           '"%(value)s".' % {
                   'doi': doi_value,
