@@ -160,7 +160,7 @@ list_of_dois = list(set(
 # Query the API
 # =============================================================================
 
-for doi in list_of_dois[0:2]:
+for doi in list_of_dois[0:10]:
     if (config.rerun_dois_that_are_already_in_database is not True and
             is_doi_already_answered_in_database(doi) is True):
             logging.info(
