@@ -4,6 +4,10 @@ import requests
 import logging
 
 
+class ErrorWithAPI(Exception):
+    pass
+
+
 # From the backoff documentation (https://pypi.python.org/pypi/backoff),
 # set maximum number of tries on a failed download:
 @backoff.on_exception(
@@ -29,7 +33,7 @@ def create_api_request(
         custom_api_query_header['user-agent'] = custom_user_agent_string
 
     # Update the static api parameters to include the (dynamic) DOI:
-    api_request_parameters = static_api_request_parameters_dictionary
+    api_request_parameters = static_api_request_parameters_dictionary.copy()
     api_request_parameters.update({
             'rft_id': f'info:doi/{item_doi}'})
 
@@ -37,9 +41,6 @@ def create_api_request(
             api_base_url,
             params=api_request_parameters,
             headers=custom_api_query_header)
-
-    class ErrorWithAPI(Exception):
-        pass
 
     if api_response.status_code != 200:
         raise ErrorWithAPI('Problem contacting API: {}'.format(
