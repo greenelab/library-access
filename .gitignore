@@ -1,0 +1,9 @@
+.directory
+__pycache__
+pull_request_Information.md
+Datasets/State_of_OA/Not_Currently_Used
+Datasets/State_of_OA/state-of-oa-dois_CLEAN.tsv
+library_coverage_xml_and_fulltext_indicators.db*
+library_management_system_downloader/Not_Currently_Used
+library_management_system_downloader/downloader_configuration_file.py
+example_sql_for_looking_at_sqlite_database.sql
