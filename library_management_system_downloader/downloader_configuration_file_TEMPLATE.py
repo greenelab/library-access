@@ -16,6 +16,6 @@ api_base_url = (
 # This dataset is currently expected to contain two columns:
 # 'doi' and 'oadoi_color' (containing values 'closed', 'bronze', 'hybrid',
 # etc.)
-input_tsv_dataset_location = '/path/to/dois.tsv'
+input_tsv_dataset_location = 'Datasets/State_of_OA/state-of-oa-dois.tsv'
 
 rerun_dois_that_are_already_in_database = False
