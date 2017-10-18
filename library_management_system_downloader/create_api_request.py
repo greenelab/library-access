@@ -17,6 +17,7 @@ class ErrorWithAPI(Exception):
         max_tries=8)
 # From the ratelimit documentation (https://pypi.python.org/pypi/ratelimit),
 # set the rate limit (in seconds) for API calls:
+# A rate limit of 0.2 means max five queries per one second.
 @rate_limited(0.2)
 def create_api_request(
         item_doi,
