@@ -45,8 +45,11 @@ def create_api_request(
             headers=custom_api_query_header)
 
     if api_response.status_code != 200:
-        raise ErrorWithAPI('Problem contacting API: {}'.format(
-                api_response.status_code))
+        raise ErrorWithAPI(
+                f'Problem contacting API: We received Status Code '
+                '{api_response.status_code}. The full response text is '
+                'below: {api_response.text}')
+                
 
     logging.info(f'Returning query results from URL "{api_response.url}"')
 
