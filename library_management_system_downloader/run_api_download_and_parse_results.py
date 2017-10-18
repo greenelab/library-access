@@ -159,7 +159,7 @@ list_of_dois = list(set(
 
 for doi in list_of_dois[0:10]:
     if (config.rerun_dois_that_are_already_in_database is not True and
-            is_doi_already_answered_in_database(doi) is True):
+            is_doi_already_answered_in_database(doi)):
             logging.info(
                     f'DOI "{doi}" is already in the database with a fulltext '
                     'answer. config.rerun_dois_that_are_already_in_database '
