@@ -1,7 +1,8 @@
+import logging
+
 import backoff
 from ratelimit import rate_limited
 import requests
-import logging
 
 
 class ErrorWithAPI(Exception):
