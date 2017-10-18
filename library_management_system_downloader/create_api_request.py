@@ -49,7 +49,6 @@ def create_api_request(
                 f'Problem contacting API: We received Status Code '
                 '{api_response.status_code}. The full response text is '
                 'below: {api_response.text}')
-                
 
     logging.info(f'Returning query results from URL "{api_response.url}"')
 
