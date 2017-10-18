@@ -13,6 +13,9 @@ user_agent_custom_string = (
 api_base_url = (
             'https://example.com/openurl')
 
-tsv_dataset_location = '/path/to/dois.tsv'
+# This dataset is currently expected to contain two columns:
+# 'doi' and 'oadoi_color' (containing values 'closed', 'bronze', 'hybrid',
+# etc.)
+input_tsv_dataset_location = '/path/to/dois.tsv'
 
 rerun_dois_that_are_already_in_database = False

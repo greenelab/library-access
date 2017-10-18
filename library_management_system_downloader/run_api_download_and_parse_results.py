@@ -16,14 +16,14 @@ from sqlalchemy.orm import sessionmaker
 # - static_parameters_for_api (a dictionary)
 # - user_agent_custom_string (a string)
 # - api_base_url (a string)
-# -tsv_dataset_location (a filepath string)
+# -input_tsv_dataset_location (a filepath string)
 
 from library_management_system_downloader \
         import downloader_configuration_file as config
 # config.api_base_url
 # config.user_agent_custom_string
 # config.static_parameters_for_api
-# config.tsv_dataset_location
+# config.input_tsv_dataset_location
 
 from library_management_system_downloader import create_api_request as api
 from library_management_system_downloader \
@@ -144,9 +144,10 @@ def insert_a_doi_database_record(
 # =============================================================================
 
 # Import the datset into
-doi_dataset = pd.read_csv(config.tsv_dataset_location, sep='\t', header=0)
+doi_dataset = pd.read_csv(
+        config.input_tsv_dataset_location, sep='\t', header=0)
 
-# Set will get unique values in the list:
+# set() will get unique values in the list:
 list_of_dois = list(set(
         doi_dataset[doi_dataset['oadoi_color'] == 'closed']['doi']))
 # len(list_of_dois)
