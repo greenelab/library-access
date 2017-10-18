@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import logging
+import unittest
 
 
 def fulltext_indication(api_response_xml):
@@ -11,7 +12,7 @@ def fulltext_indication(api_response_xml):
             features='xml')
 
     doi_value = parseable_response_xml.find(
-            id='rft.doi').string
+            id='rft.doi')
 
     full_text_indicator_value = parseable_response_xml.find(
             id='full_text_indicator')
@@ -27,12 +28,21 @@ def fulltext_indication(api_response_xml):
         return 0
 
 # =============================================================================
-# Function examples
+# Function examples / tests
 # =============================================================================
 
-# Should always return 1:
-# evaluate_api_response_for_fulltext_indication(
-#         '<key id="full_text_indicator">true</key>')
 
-# Should always return 0:
-# evaluate_api_response_for_fulltext_indication('tester')
+class TestFulltextIndication(unittest.TestCase):
+
+    def test_true(self):
+        self.assertEqual(
+                fulltext_indication(
+                        '<key id="full_text_indicator">true</key>'),
+                1)
+
+    def test_false(self):
+        self.assertEqual(
+                fulltext_indication('tester'),
+                0)
+
+# unittest.main()  # To run the above unit tests.
