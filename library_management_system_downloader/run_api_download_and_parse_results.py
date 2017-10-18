@@ -10,20 +10,17 @@ from sqlalchemy.orm import sessionmaker
 # Load configuration variables
 # =============================================================================
 
-# Location of configuration file.
-# This should be a python script (named with a .py file extension), and
-# should contain  variables named the following:
-# - static_parameters_for_api (a dictionary)
-# - user_agent_custom_string (a string)
-# - api_base_url (a string)
-# -input_tsv_dataset_location (a filepath string)
-
+"""
+Location of configuration file.
+This should be a python script (named with a .py file extension), and
+should contain  variables named the following:
+- static_parameters_for_api (a dictionary)
+- user_agent_custom_string (a string)
+- api_base_url (a string)
+-input_tsv_dataset_location (a filepath string)
+"""
 from library_management_system_downloader \
         import downloader_configuration_file as config
-# config.api_base_url
-# config.user_agent_custom_string
-# config.static_parameters_for_api
-# config.input_tsv_dataset_location
 
 from library_management_system_downloader import create_api_request as api
 from library_management_system_downloader \
