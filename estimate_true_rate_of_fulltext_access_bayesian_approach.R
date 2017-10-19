@@ -142,7 +142,7 @@ parameters {
   real<lower=0,upper=1> theta;
 } 
 model {
-  theta ~ beta(1,1); // A flat prior
+  theta ~ beta(1,1);  // A flat prior
   for (n in 1:N)
     y[n] ~ bernoulli(theta);
 }
