@@ -151,15 +151,15 @@ model {
 # Run the stan model -----------------------------------------------------------
 
 model_fit <- stan(
-	model_code = stan_model,
-	model_name = "Bernoulli likelihood, Beta(1,1) Prior",
-	data = list(
-		N = nrow(full_doi_information_dataset),
-		y = full_doi_information_dataset$full_text_indicator
-	),
-	iter = 1000,
-	chains = 4,
-	verbose = TRUE
+  model_code = stan_model,
+  model_name = "Bernoulli likelihood, Beta(1,1) Prior",
+  data = list(
+    N = nrow(full_doi_information_dataset),
+    y = full_doi_information_dataset$full_text_indicator
+  ),
+  iter = 1000,
+  chains = 4,
+  verbose = TRUE
 )
 
 # Analyze the stan output ------------------------------------------------------
@@ -172,7 +172,7 @@ shinystan_object <- launch_shinystan(model_fit)
 
 # Regarding the relationship between a Bayesian Credible Interval vs. a more
 # standard Confidence Interval: From https://en.wikipedia.org/wiki/Credible_interval:
-	# "For the case of a single parameter and data that can be summarised in a
+  # "For the case of a single parameter and data that can be summarised in a
   # single sufficient statistic, it can be shown that the credible interval and
   # the confidence interval will coincide if the unknown parameter is a location
   # parameter, with a prior that is a uniform flat distribution."
@@ -185,11 +185,11 @@ shinystan_object <- launch_shinystan(model_fit)
 posterior <- as.matrix(model_fit)
 
 plot_title <- ggtitle(
-	"Posterior distribution",
+  "Posterior distribution",
   "with median and 95% credible interval"
 )
 mcmc_areas(
-	posterior,
+  posterior,
   pars = c("theta"),
   prob = 0.95
 ) + 
