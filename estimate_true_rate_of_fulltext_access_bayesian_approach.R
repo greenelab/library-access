@@ -11,7 +11,7 @@
 # DOI open access "colors"). This will be used below to allow subsetting data based on those colors.
 location_of_original_tsv_datset <- 'Datasets/State_of_OA/state-of-oa-dois.tsv'
 
-sqlite_database_with_library_holdings_information <- 'library_coverage_xml_and_fulltext_indicators.db'
+location_of_sqlite_full_text_database <- 'library_coverage_xml_and_fulltext_indicators.db'
 
 # Load packages ----------------------------------------------------------------
 
@@ -44,32 +44,89 @@ options(mc.cores = parallel::detectCores())
 
 ## Load other packages ---------------------------------------------------------
 
-library('shinystan')
 library('bayesplot')
+library('DBI')  # Load DBI to use RSQLite, following the RSQLite vignette
+  # (https://cran.r-project.org/web/packages/RSQLite/vignettes/RSQLite.html)
+library('RSQLite')
 library('rstantools')
+library('shinystan')
 
 # Load data --------------------------------------------------------------------
 
-sample_size <- 10000
+# Load the original dois dataset:
+doi_metadata_dataset <- read.table(
+  location_of_original_tsv_datset,
+  header = TRUE,
+  sep = "\t",
+  quote = "",
+  strip.white = TRUE,
+  stringsAsFactors = c(FALSE, TRUE)  # The two columns are DOI and O.A. color
+)
+# View(doi_metadata_dataset)  # Check the dataset visually
 
-probability_of_yes <- round(
-	runif(1, min = 0, max = 1), 
-	digits = 2
+# Load the sqlite database that contains full-text holdings information:
+fulltext_access_database <- dbConnect(
+  RSQLite::SQLite(),
+  location_of_sqlite_full_text_database
+)
+# dbListTables(fulltext_access_database)  # Check the list of database tables
+
+# Get whatever full-text information we've stored in our sqlite database:
+dois_and_full_text_indicator <- dbGetQuery(
+  fulltext_access_database,
+  'SELECT
+    dois_table.doi,
+    library_holdings_data.full_text_indicator
+  FROM library_holdings_data
+  JOIN dois_table
+  ON library_holdings_data.doi_foreign_key = dois_table.database_id
+  WHERE
+    library_holdings_data.full_text_indicator IS NOT NULL'
 )
 
-dataset <- data.frame(
-	"Item_ID_Number" = 1:sample_size,
-	"Do_We_Have_the_Item" = rbinom(
-		n = sample_size, 
-		size = 1, 
-		prob = probability_of_yes
-	)
+dbDisconnect(fulltext_access_database)  # Close our connection with the database
+
+# Join open-access color to the above:
+full_doi_information_dataset <- merge(
+  dois_and_full_text_indicator,
+  doi_metadata_dataset,
+  by = 'doi'
 )
-# View(example_binary_data)
+# View(full_doi_information_dataset)  # Check our work visually.
+
+# Remove all duplicate DOIs except the *last* (i.e., most recently added to the
+# database) instance of each:
+full_doi_information_dataset <- full_doi_information_dataset[
+  !duplicated(
+    full_doi_information_dataset[, 'doi'], fromLast = T
+  )
+,]
+# View(full_doi_information_dataset)  # Check our work visually.
+
+# Summarize our dataset for the user -------------------------------------------
+
+message("Our dataset has ", nrow(full_doi_information_dataset), " rows, each ",
+  "of a unique doi (in cases of duplicate DOIs, only the last-listed instance ",
+  "is retained)."
+)
+
+# Print a frequency table summarizing the different types of colors:
+message("We have the following numbers of each type of Open Access color:"
+)
+message(paste0(capture.output(
+  as.data.frame(
+    table(
+      full_doi_information_dataset[, c('oadoi_color')],
+      dnn = 'Color'
+    ),
+    responseName = 'Frequency'
+  )
+), collapse = "\n"))
+
 
 # Define a model for stan ------------------------------------------------------
 
-# Below is defined a basic stan model for a Bernoulli likelihood (data-
+# Below, we defined a basic stan model for a Bernoulli likelihood (data-
 # generating) function, with a flat beta-distributed prior:
 # This comes from the stan developers' examples, at
 # https://github.com/stan-dev/example-models/blob/master/basic_estimators/bernoulli.stan,
@@ -96,22 +153,33 @@ model_fit <- stan(
 	model_code = stan_model,
 	model_name = "Bernoulli likelihood, Beta(1,1) Prior",
 	data = list(
-		N = length(dataset$Do_We_Have_the_Item),
-		y = dataset$Do_We_Have_the_Item
+		N = nrow(full_doi_information_dataset),
+		y = full_doi_information_dataset$full_text_indicator
 	),
 	iter = 1000,
 	chains = 4,
 	verbose = TRUE
 )
 
-# Explore the stan output manually ---------------------------------------------
+# Analyze the stan output ------------------------------------------------------
+
+## Explore the stan output manually --------------------------------------------
 
 shinystan_object <- launch_shinystan(model_fit)
 
-# NOTE WELL re: a credible interval vs. a confidence interval: From https://en.wikipedia.org/wiki/Credible_interval:
-	# "For the case of a single parameter and data that can be summarised in a single sufficient statistic, it can be shown that the credible interval and the confidence interval will coincide if the unknown parameter is a location parameter, with a prior that is a uniform flat distribution."
+## Additional notes about interpreting this model ------------------------------
 
-# Make some visualizations, following http://mc-stan.org/bayesplot/reference/bayesplot-package.html#examples
+# Regarding the relationship between a Bayesian Credible Interval vs. a more
+# standard Confidence Interval: From https://en.wikipedia.org/wiki/Credible_interval:
+	# "For the case of a single parameter and data that can be summarised in a
+  # single sufficient statistic, it can be shown that the credible interval and
+  # the confidence interval will coincide if the unknown parameter is a location
+  # parameter, with a prior that is a uniform flat distribution."
+
+## Make some visualizations from the stan output -------------------------------
+
+# This follows 
+# http://mc-stan.org/bayesplot/reference/bayesplot-package.html#examples
 
 posterior <- as.matrix(model_fit)
 
@@ -126,4 +194,10 @@ mcmc_areas(
 ) + 
 plot_title
 
+# If we would like to get the Credible Interval ourselves, we can use the
+# following:
+# theta_posterior <- as.data.frame(posterior)$theta
+# mean(theta_posterior)
+# sd(theta_posterior)
+# quantile(theta_posterior, c(.025, .50, .975))
 
