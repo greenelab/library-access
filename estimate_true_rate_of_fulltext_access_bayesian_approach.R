@@ -98,7 +98,8 @@ full_doi_information_dataset <- merge(
 # database) instance of each:
 full_doi_information_dataset <- full_doi_information_dataset[
   !duplicated(
-    full_doi_information_dataset[, 'doi'], fromLast = T
+    full_doi_information_dataset[, 'doi'],
+    fromLast = T
   )
 ,]
 # View(full_doi_information_dataset)  # Check our work visually.
