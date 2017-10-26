@@ -17,8 +17,11 @@ class ErrorWithAPI(Exception):
         max_tries=8)
 # From the ratelimit documentation (https://pypi.python.org/pypi/ratelimit),
 # set the rate limit (in seconds) for API calls:
-# A rate limit of 0.2 means max five queries per one second.
-@rate_limited(0.2)
+# Following https://github.com/tomasbasham/ratelimit/blob/master/README.rst,
+# running @rate_limited(1, 5) will allow the API to be called 1 time every 5
+# seconds. Similarly, using @rate_limited(5, 1) will allow the API to be
+# called 5 times every 1 second.
+@rate_limited(5, 1)
 def create_api_request(
         item_doi,
         api_base_url,
@@ -36,8 +39,7 @@ def create_api_request(
 
     # Update the static api parameters to include the (dynamic) DOI:
     api_request_parameters = static_api_request_parameters_dictionary.copy()
-    api_request_parameters.update({
-            'rft_id': f'info:doi/{item_doi}'})
+    api_request_parameters['rft_id'] = f'info:doi/{item_doi}'
 
     api_response = requests.get(
             api_base_url,
