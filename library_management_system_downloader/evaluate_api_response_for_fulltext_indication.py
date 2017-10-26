@@ -21,11 +21,10 @@ def fulltext_indication(api_response_xml):
           f'The value for the "full_text_indicator" key for doi "{doi_value}" '
           'is "full_text_indicator_value".')
 
-    if(full_text_indicator_value is not None and
-       full_text_indicator_value.string == 'true'):
-        return 1
-    else:
+    if full_text_indicator_value is None:
         return 0
+    return int(full_text_indicator_value.string == 'true')  # This will
+    # evaluate to either 1 or 0.
 
 # =============================================================================
 # Function examples / tests
