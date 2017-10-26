@@ -140,12 +140,12 @@ def insert_a_doi_database_record(
 # Import the list of DOIs
 # =============================================================================
 
-# Import the datset into
-doi_dataset = pd.read_csv(
+# Import the datset
+# Note that read_table defaults to using TSV (tab-separated) format and using
+# the first row as a header row.
+doi_dataset = pd.read_table(
         config.input_tsv_dataset_location,
-        compression='infer',  # Allow Pandas to read compressed files.
-        sep='\t',
-        header=0)
+        compression='infer')  # Allow Pandas to read compressed files.
 
 # set() will get unique values in the list:
 list_of_dois = list(set(
