@@ -16,6 +16,11 @@ api_base_url = (
 # This dataset is currently expected to contain two columns:
 # 'doi' and 'oadoi_color' (containing values 'closed', 'bronze', 'hybrid',
 # etc.)
-input_tsv_dataset_location = 'Datasets/State_of_OA/state-of-oa-dois.tsv'
+# This may be a local file or a URL. It may also be compressed (e.g., a
+# tsv.xz file)
+input_tsv_dataset_location = (
+        'https://github.com/greenelab/scihub/raw/'
+        '4172526ac7433357b31790578ad6f59948b6db26/data/'
+        'state-of-oa-dois.tsv.xz')
 
 rerun_dois_that_are_already_in_database = False
