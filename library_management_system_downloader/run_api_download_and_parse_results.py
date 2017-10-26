@@ -175,7 +175,7 @@ for doi in list_of_dois[0:10]:
         api_response = api.create_api_request(
                 doi,
                 api_base_url=config.api_base_url,
-                static_api_request_parameters_dictionary=config.
+                api_request_parameters=config.
                 static_parameters_for_api,
                 custom_user_agent_string=config.user_agent_custom_string)
 

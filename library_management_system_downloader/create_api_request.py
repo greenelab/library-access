@@ -25,20 +25,17 @@ class ErrorWithAPI(Exception):
 def create_api_request(
         item_doi,
         api_base_url,
-        static_api_request_parameters_dictionary=None,
+        api_request_parameters={},
         custom_user_agent_string=None):
     """Given an item DOI (lacking the 'doi:/' prefix), query an OpenURL
     resolver) and return XML from it."""
-
-    if static_api_request_parameters_dictionary is None:
-        static_api_request_parameters_dictionary = {}
 
     custom_api_query_header = {}
     if custom_user_agent_string:
         custom_api_query_header['user-agent'] = custom_user_agent_string
 
     # Update the static api parameters to include the (dynamic) DOI:
-    api_request_parameters = static_api_request_parameters_dictionary.copy()
+    api_request_parameters = api_request_parameters.copy()
     api_request_parameters['rft_id'] = f'info:doi/{item_doi}'
 
     api_response = requests.get(
