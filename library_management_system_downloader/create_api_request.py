@@ -21,7 +21,7 @@ class ErrorWithAPI(Exception):
 # running @rate_limited(1, 5) will allow the API to be called 1 time every 5
 # seconds. Similarly, using @rate_limited(5, 1) will allow the API to be
 # called 5 times every 1 second.
-@rate_limited(5, 1)
+@rate_limited(period=5, every=1)
 def create_api_request(
         item_doi,
         api_base_url,
