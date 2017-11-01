@@ -14,5 +14,4 @@ dependencies:
 - anaconda::yaml=0.1.6
 - pip:
   - backoff==1.4.3
-  - ipython-genutils==0.2.0
   - ratelimit==1.4.1
