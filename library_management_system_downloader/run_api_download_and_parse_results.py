@@ -102,10 +102,7 @@ def is_doi_already_answered_in_database(
             filter(library_holdings_table.c.full_text_indicator.isnot(None))
             .first()
 
-    if existing_doi_with_fulltext_answer is None:
-        return False
-    else:
-        return True
+    return bool(existing_doi_with_fulltext_answer)  # Returns False or True.
 
 # Example invocation:
 # is_doi_already_answered_in_database('10.1001/2012.jama.10139')
