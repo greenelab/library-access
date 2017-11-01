@@ -95,13 +95,14 @@ sql_session = Session()
 def is_doi_already_answered_in_database(
         doi,
         sqlalchemy_session=sql_session):
-    existing_doi_with_fulltext_anwer = sql_session.query(distinct(
-        dois_table.c.doi)).join(library_holdings_table).filter(
-            dois_table.c.doi == doi).filter(
-                    library_holdings_table.c.full_text_indicator.isnot(
-                            None)).first()
+    existing_doi_with_fulltext_answer = sql_session.query(
+            distinct(dois_table.c.doi))
+            .join(library_holdings_table)
+            .filter(dois_table.c.doi == doi).
+            filter(library_holdings_table.c.full_text_indicator.isnot(None))
+            .first()
 
-    if existing_doi_with_fulltext_anwer is None:
+    if existing_doi_with_fulltext_answer is None:
         return False
     else:
         return True
