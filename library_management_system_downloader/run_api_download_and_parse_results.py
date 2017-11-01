@@ -146,7 +146,7 @@ doi_dataset = pd.read_table(
         compression='infer')  # Allow Pandas to read compressed files.
 
 # set() will get unique values in the list:
-list_of_dois = list(set(
+list_of_dois = sorted(set(
         doi_dataset[doi_dataset['oadoi_color'] == 'closed']['doi']))
 # len(list_of_dois)
 
