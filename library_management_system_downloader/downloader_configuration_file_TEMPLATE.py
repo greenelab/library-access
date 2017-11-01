@@ -24,3 +24,6 @@ input_tsv_dataset_location = (
         'state-of-oa-dois.tsv.xz')
 
 rerun_dois_that_are_already_in_database = False
+
+oadoi_values_to_limit_search_to = ['closed']  # This can be, e.g.,
+# "['closed', 'gold']", etc.

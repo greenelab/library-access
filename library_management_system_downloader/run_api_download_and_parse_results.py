@@ -96,10 +96,10 @@ def is_doi_already_answered_in_database(
         doi,
         sqlalchemy_session=sql_session):
     existing_doi_with_fulltext_answer = sql_session.query(
-            distinct(dois_table.c.doi))
-            .join(library_holdings_table)
-            .filter(dois_table.c.doi == doi).
-            filter(library_holdings_table.c.full_text_indicator.isnot(None))
+            distinct(dois_table.c.doi)) \
+            .join(library_holdings_table) \
+            .filter(dois_table.c.doi == doi). \
+            filter(library_holdings_table.c.full_text_indicator.isnot(None)) \
             .first()
 
     return bool(existing_doi_with_fulltext_answer)  # Returns False or True.
@@ -147,7 +147,9 @@ doi_dataset = pd.read_table(
 
 # set() will get unique values in the list:
 list_of_dois = sorted(set(
-        doi_dataset[doi_dataset['oadoi_color'] == 'closed']['doi']))
+        doi_dataset[
+                doi_dataset['oadoi_color']
+                .isin(config.oadoi_values_to_limit_search_to)]['doi']))
 # len(list_of_dois)
 
 # Note that we will use config.rerun_dois_that_are_already_in_database to
