@@ -160,7 +160,15 @@ list_of_dois = sorted(set(
 # Query the API
 # =============================================================================
 
-for doi in list_of_dois[0:10]:
+# If the user has specified records to download (e.g., as a test run), use
+# those record numbers. Otherwise, download everything.
+if config.record_numbers_to_download is None:
+    doi_record_numbers_to_download = slice(0, len(list_of_dois), 1)
+else:
+    doi_record_numbers_to_download = config.record_numbers_to_download  # This
+    # is expected to be of type slice.
+
+for doi in list_of_dois[doi_record_numbers_to_download]:
     if (config.rerun_dois_that_are_already_in_database is not True and
             is_doi_already_answered_in_database(doi)):
             logging.info(
