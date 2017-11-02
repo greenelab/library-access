@@ -15,3 +15,4 @@ dependencies:
 - pip:
   - backoff==1.4.3
   - ratelimit==1.4.1
+  - lxml==3.7.3
