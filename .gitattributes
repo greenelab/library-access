@@ -1,0 +1,1 @@
+data/library_coverage_xml_and_fulltext_indicators.db.xz filter=lfs diff=lfs merge=lfs -text
