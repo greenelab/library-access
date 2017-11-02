@@ -1,6 +1,5 @@
 .directory
 __pycache__
 .cache
-
-library_coverage_xml_and_fulltext_indicators.db*
+./library_coverage_xml_and_fulltext_indicators.db*
 downloader_configuration_file.py
