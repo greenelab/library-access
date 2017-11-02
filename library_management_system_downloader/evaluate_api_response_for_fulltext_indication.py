@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import logging
-import pytest
 
 
 def fulltext_indication(api_response_xml):
@@ -25,14 +24,3 @@ def fulltext_indication(api_response_xml):
         return 0
     return int(full_text_indicator_value.string == 'true')  # This will
     # evaluate to either 1 or 0.
-
-# =============================================================================
-# Function examples / tests
-# =============================================================================
-
-
-def test_fulltext_indication():
-    assert fulltext_indication('<key id="full_text_indicator">true</key>') == 1
-
-    assert fulltext_indication('tester') == 0
-# test_fulltext_indication()
