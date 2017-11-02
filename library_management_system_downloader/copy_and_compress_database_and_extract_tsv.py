@@ -84,7 +84,7 @@ joined_dataset.to_csv(
         path_or_buf=tsv_output_path,
         sep='\t',
         index=False,  # Do not write row numbers
-        compression='gzip')
+        compression='xz')
 
 # =============================================================================
 # Save a compressed copy of the database
