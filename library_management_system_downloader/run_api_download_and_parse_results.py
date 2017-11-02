@@ -98,8 +98,8 @@ def is_doi_already_answered_in_database(
     existing_doi_with_fulltext_answer = sql_session.query(
             distinct(dois_table.c.doi)) \
             .join(library_holdings_table) \
-            .filter(dois_table.c.doi == doi). \
-            filter(library_holdings_table.c.full_text_indicator.isnot(None)) \
+            .filter(dois_table.c.doi == doi) \
+            .filter(library_holdings_table.c.full_text_indicator.isnot(None)) \
             .first()
 
     return bool(existing_doi_with_fulltext_answer)  # Returns False or True.
