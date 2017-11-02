@@ -6,6 +6,3 @@ def test_fulltext_indication():
             '<key id="full_text_indicator">true</key>') == 1
 
     assert to_test.fulltext_indication('tester') == 0
-
-# Run the tests:
-test_fulltext_indication()
