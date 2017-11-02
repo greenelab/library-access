@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import logging
-import unittest
+import pytest
 
 
 def fulltext_indication(api_response_xml):
@@ -19,7 +19,7 @@ def fulltext_indication(api_response_xml):
 
     logging.info(
           f'The value for the "full_text_indicator" key for doi "{doi_value}" '
-          'is "full_text_indicator_value".')
+          f'is "{full_text_indicator_value}".')
 
     if full_text_indicator_value is None:
         return 0
@@ -31,17 +31,8 @@ def fulltext_indication(api_response_xml):
 # =============================================================================
 
 
-class TestFulltextIndication(unittest.TestCase):
+def test_fulltext_indication():
+    assert fulltext_indication('<key id="full_text_indicator">true</key>') == 1
 
-    def test_true(self):
-        self.assertEqual(
-                fulltext_indication(
-                        '<key id="full_text_indicator">true</key>'),
-                1)
-
-    def test_false(self):
-        self.assertEqual(
-                fulltext_indication('tester'),
-                0)
-
-# unittest.main()  # To run the above unit tests.
+    assert fulltext_indication('tester') == 0
+# test_fulltext_indication()
