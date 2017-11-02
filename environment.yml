@@ -1,4 +1,4 @@
-name: UPenn_Holdings_Project
+name: library-access
 dependencies:
 - anaconda::beautifulsoup4=4.6.0
 - anaconda::ipython=5.3.0
