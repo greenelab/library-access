@@ -22,7 +22,7 @@ compressed_database_copy_name = (
         'library_coverage_xml_and_fulltext_indicators'
         '.db.xz')
 
-tsv_output_file_name = 'library_coverage_xml_and_fulltext_indicators.tsv'
+tsv_output_file_name = 'library_coverage_xml_and_fulltext_indicators.tsv.xz'
 
 # =============================================================================
 # Create additional settings
