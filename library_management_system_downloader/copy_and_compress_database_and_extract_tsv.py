@@ -72,7 +72,7 @@ joined_dataset = pd.read_sql(
 # Sort the dataset by DOI and timestamp, so that it will always be in the
 # same order:
 joined_dataset.sort_values(
-        by=["doi", "timestamp"],
+        by=["timestamp", "doi"],
         inplace=True)
 
 tsv_output_path = os.path.join(data_directory, tsv_output_file_name)
