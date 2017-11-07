@@ -59,8 +59,8 @@ Path(data_directory).mkdir(parents=True, exist_ok=True)
 # Extract data from the databse, and save that as a TSV
 # =============================================================================
 
-# SELECT * FROM messages where id in (
-# SELECT max(id) FROM messages GROUP BY from_id ) order by id desc
+# We'll first define a subquery to get just the latest full text information
+# for each DOI:
 dataset_max_timestamp_for_each_doi_query = sql_session.query(
         func.max(library_holdings_data.primary_key)).group_by(
                 library_holdings_data.doi_foreign_key)
@@ -69,6 +69,7 @@ dataset_max_timestamp_for_each_doi_query = sql_session.query(
 # list(dataset_max_timestamp_for_each_doi_query)  # See the list of max
 # primary keys.
 
+# We'll now get the DOI and full-text indicator based on the subquery above:
 dataset_join_query = sql_session.query(
         dois_table.doi,
         # library_holdings_data.timestamp,  # Uncomment to also get the
