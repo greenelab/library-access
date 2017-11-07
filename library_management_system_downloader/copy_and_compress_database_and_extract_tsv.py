@@ -8,6 +8,7 @@ import pandas as pd
 from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
+from sqlalchemy import func
 from sqlalchemy.orm import sessionmaker
 
 # =============================================================================
@@ -58,11 +59,27 @@ Path(data_directory).mkdir(parents=True, exist_ok=True)
 # Extract data from the databse, and save that as a TSV
 # =============================================================================
 
+# SELECT * FROM messages where id in (
+# SELECT max(id) FROM messages GROUP BY from_id ) order by id desc
+dataset_max_timestamp_for_each_doi_query = sql_session.query(
+        func.max(library_holdings_data.primary_key)).group_by(
+                library_holdings_data.doi_foreign_key)
+
+# str(dataset_max_timestamp_for_each_doi_query)  # See the SQL being used.
+# list(dataset_max_timestamp_for_each_doi_query)  # See the list of max
+# primary keys.
+
 dataset_join_query = sql_session.query(
         dois_table.doi,
-        library_holdings_data.timestamp,
-        # library_holdings_data.xml_response,
-        library_holdings_data.full_text_indicator).join(library_holdings_data)
+        # library_holdings_data.timestamp,  # Uncomment to also get the
+        # timestamp of the DOI fulltext query
+        # library_holdings_data.xml_response,  # Uncomment to also get the
+        # full XML response.
+        library_holdings_data.full_text_indicator) \
+        .join(library_holdings_data) \
+        .group_by(dois_table.doi) \
+        .filter(library_holdings_data.primary_key.in_(
+                dataset_max_timestamp_for_each_doi_query))
 
 joined_dataset = pd.read_sql(
             dataset_join_query.statement,
@@ -71,7 +88,7 @@ joined_dataset = pd.read_sql(
 # Sort the dataset by DOI and timestamp, so that it will always be in the
 # same order:
 joined_dataset.sort_values(
-        by=["timestamp", "doi"],
+        by=["doi"],
         inplace=True)
 
 tsv_output_path = str(Path(data_directory, tsv_output_file_name))
