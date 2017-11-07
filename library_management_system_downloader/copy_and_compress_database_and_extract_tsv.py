@@ -4,8 +4,8 @@
 
 import logging
 import lzma
-import os
 import pandas as pd
+from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import sessionmaker
@@ -52,8 +52,7 @@ sql_session = Session()
 # Create the data directory if it doesn't already exist
 # =============================================================================
 
-if not os.path.exists(data_directory):
-    os.makedirs(data_directory)
+Path(data_directory).mkdir(parents=True, exist_ok=True)
 
 # =============================================================================
 # Extract data from the databse, and save that as a TSV
@@ -75,7 +74,7 @@ joined_dataset.sort_values(
         by=["timestamp", "doi"],
         inplace=True)
 
-tsv_output_path = os.path.join(data_directory, tsv_output_file_name)
+tsv_output_path = str(Path(data_directory, tsv_output_file_name))
 
 logging.info(
         f'Creating a TSV from the database, at "{tsv_output_path}"...')
@@ -90,8 +89,8 @@ joined_dataset.to_csv(
 # Save a compressed copy of the database
 # =============================================================================
 
-database_output_path = os.path.join(
-        data_directory, compressed_database_copy_name)
+database_output_path = str(Path(
+        data_directory, compressed_database_copy_name))
 
 logging.info(
         f'Creating a copy of the database under "'
