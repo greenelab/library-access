@@ -108,6 +108,34 @@ joined_dataset.to_csv(
 # Save a compressed copy of the database
 # =============================================================================
 
+
+def xz_compress_a_file(
+        input_file_location,
+        output_file_location,
+        is_the_file_binary=True):
+    """Compress an existing file with lzma compression.
+
+    This follows an example from the gzip documentation, at
+    https://docs.python.org/3/library/gzip.html, and applies the same logic
+    using lzma.
+
+    is_the_file_binary should be either True or False."""
+
+    assert type(is_the_file_binary) is bool  # Confirm that is_the_file_binary
+    # is either True or False
+
+    if is_the_file_binary is True:
+        binary_indicator = 'b'
+    else:
+        binary_indicator = ''
+
+    with open(sqlite_database_location, f'r{binary_indicator}') as \
+        database_file, \
+        lzma.open(database_output_path, f'w{binary_indicator}') as \
+            output_file:
+            shutil.copyfileobj(database_file, output_file)
+
+
 database_output_path = str(Path(
         data_directory, compressed_database_copy_name))
 
@@ -115,9 +143,4 @@ logging.info(
         f'Creating a copy of the database under "'
         f'{database_output_path}"...')
 
-# This follows an example from the gzip documentation, at
-# https://docs.python.org/3/library/gzip.html, and applies the same logic using
-# lzma:
-with open(sqlite_database_location, 'rb') as database_file, lzma.open(
-        database_output_path, 'wb') as output_file:
-        shutil.copyfileobj(database_file, output_file)
+xz_compress_a_file(sqlite_database_location, database_output_path)
