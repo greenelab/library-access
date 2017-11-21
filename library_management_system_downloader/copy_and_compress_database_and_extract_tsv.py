@@ -6,6 +6,7 @@ import logging
 import lzma
 import pandas as pd
 from pathlib import Path
+import shutil
 from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy import func
@@ -114,6 +115,9 @@ logging.info(
         f'Creating a copy of the database under "'
         f'{database_output_path}"...')
 
-with open(sqlite_database_location, "rb") as database_file:
-    with lzma.open(database_output_path, "wb") as output_file:
-        output_file.writelines(database_file)
+# This follows an example from the gzip documentation, at
+# https://docs.python.org/3/library/gzip.html, and applies the same logic using
+# lzma:
+with open(sqlite_database_location, 'rb') as database_file, lzma.open(
+        database_output_path, 'wb') as output_file:
+        shutil.copyfileobj(database_file, output_file)
