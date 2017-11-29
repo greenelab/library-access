@@ -129,11 +129,11 @@ def xz_compress_a_file(
     else:
         binary_indicator = ''
 
-    with open(sqlite_database_location, f'r{binary_indicator}') as \
-        database_file, \
-        lzma.open(database_output_path, f'w{binary_indicator}') as \
+    with open(input_file_location, f'r{binary_indicator}') as \
+        input_file, \
+        lzma.open(output_file_location, f'w{binary_indicator}') as \
             output_file:
-            shutil.copyfileobj(database_file, output_file)
+            shutil.copyfileobj(input_file, output_file)
 
 
 database_output_path = str(Path(
