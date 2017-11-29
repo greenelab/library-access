@@ -131,7 +131,7 @@ def xz_compress_a_file(
 
     with open(input_file_location, f'r{binary_indicator}') as \
         input_file, \
-        lzma.open(output_file_location, f'w{binary_indicator}') as \
+        lzma.open(output_file_location, 'wb') as \
             output_file:
             shutil.copyfileobj(input_file, output_file)
 
