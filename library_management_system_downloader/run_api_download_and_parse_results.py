@@ -66,6 +66,10 @@ dois_table = Table(
 
 library_holdings_table = Table(
         'library_holdings_data', metadata,
+        Column('primary_key', Integer, primary_key=True),  # I am creating this
+        # because sqlachemy can only map tables that have primary keys
+        # (http://docs.sqlalchemy.org/en/rel_1_0/faq/ormconfiguration.
+        # html#how-do-i-map-a-table-that-has-no-primary-key)
         Column('doi_foreign_key',
                String, ForeignKey("dois_table.database_id"), nullable=False),
         Column('timestamp', DateTime, nullable=False,
@@ -168,7 +172,7 @@ else:
     doi_record_numbers_to_download = config.record_numbers_to_download  # This
     # is expected to be of type slice.
 
-for doi in list_of_dois[doi_record_numbers_to_download]:
+for doi in list_of_dois[config.record_numbers_to_download]:
     if (config.rerun_dois_that_are_already_in_database is not True and
             is_doi_already_answered_in_database(doi)):
             logging.info(
