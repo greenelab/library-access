@@ -111,25 +111,14 @@ joined_dataset.to_csv(
 
 def xz_compress_a_file(
         input_file_location,
-        output_file_location,
-        is_the_file_binary=True):
+        output_file_location):
     """Compress an existing file with lzma compression.
 
     This follows an example from the gzip documentation, at
     https://docs.python.org/3/library/gzip.html, and applies the same logic
-    using lzma.
+    using lzma."""
 
-    is_the_file_binary should be either True or False."""
-
-    assert type(is_the_file_binary) is bool  # Confirm that is_the_file_binary
-    # is either True or False
-
-    if is_the_file_binary is True:
-        binary_indicator = 'b'
-    else:
-        binary_indicator = ''
-
-    with open(input_file_location, f'r{binary_indicator}') as \
+    with open(input_file_location, f'rb') as \
         input_file, \
         lzma.open(output_file_location, 'wb') as \
             output_file:
