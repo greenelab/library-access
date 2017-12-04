@@ -172,7 +172,7 @@ else:
     doi_record_numbers_to_download = config.record_numbers_to_download  # This
     # is expected to be of type slice.
 
-for doi in list_of_dois[config.record_numbers_to_download]:
+for doi in list_of_dois[doi_record_numbers_to_download]:
     if (config.rerun_dois_that_are_already_in_database is not True and
             is_doi_already_answered_in_database(doi)):
             logging.info(

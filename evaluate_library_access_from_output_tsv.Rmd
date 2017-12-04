@@ -1,0 +1,94 @@
+---
+title: "Evaluate Library Access from the Output TSV"
+author: "Jacob Levernier"
+date: "2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(include = FALSE)
+knitr::opts_chunk$set(results = "asis")
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+```{r settings}
+lzma_compressed_library_access_tsv_location <- "data/library_coverage_xml_and_fulltext_indicators.tsv.xz"
+
+original_dataset_with_oa_color_column_location <- paste0(
+  'https://github.com/greenelab/scihub/raw/',
+  '4172526ac7433357b31790578ad6f59948b6db26/data/',
+  'state-of-oa-dois.tsv.xz')
+```
+
+
+```{r read datasets}
+lzma_compressed_library_access_tsv <- read.table(
+  gzfile(lzma_compressed_library_access_tsv_location),
+  sep = '\t',
+  header = TRUE
+)
+# View(lzma_compressed_library_access_tsv)  # Check the dataset
+
+# Create a temporary filepath for downloading the original dataset.
+# Then download and read it.
+tmp_filpath_for_original_dataset <- tempfile()
+
+download.file(
+  original_dataset_with_oa_color_column_location,
+  destfile = tmp_filpath_for_original_dataset,
+  mode = 'wb'
+)
+
+original_dataset_with_oa_color_column <- read.table(
+  gzfile(tmp_filpath_for_original_dataset),
+  sep = '\t',
+  header = TRUE
+)
+# View(original_dataset_with_oa_color_column)  # Check the dataset
+```
+
+```{r merge the datasets}
+# Combine the datasets so that we have doi, full_text_indicator, and oadoi_color
+merged_datasets <- merge(
+  original_dataset_with_oa_color_column,
+  lzma_compressed_library_access_tsv,
+  by = "doi"
+)
+# View(merged_datasets)  # Check our work
+```
+
+## Summary of the downloaded dataset
+
+```{r analyze the merged dataset}
+merged_datasets_without_doi_column <- merged_datasets[
+  ,  # Use all rows
+  c("oadoi_color", "full_text_indicator")
+]
+
+frequency_table_by_oa_color <- table(merged_datasets_without_doi_column)
+# View(frequency_table_by_oa_color)
+
+proportion_table_by_oa_color <- round(
+  prop.table(
+    frequency_table_by_oa_color,
+    margin = 1)*100,
+  digits = 2
+)
+
+frequency_and_proportion_table <- data.frame(
+  "oa_doi_color" = rownames(proportion_table_by_oa_color),
+  "no_access_percent" = proportion_table_by_oa_color[,1],
+  "yes_access_percent" = proportion_table_by_oa_color[,2],
+  "yes_access_rate" = frequency_table_by_oa_color[, 2],
+  "oa_color_total" = frequency_table_by_oa_color[, 1] + frequency_table_by_oa_color[, 2]
+)
+rownames(frequency_and_proportion_table) <- NULL
+# View(frequency_and_proportion_table)
+```
+
+We queried `r nrow(merged_datasets)` DOIs of the the `r nrow(original_dataset_with_oa_color_column)` listed in the original State of OA dataset. Queried DOIs included the following OA "colors:" `r paste(unique(merged_datasets$oadoi_color), collapse = ", ")`.
+
+The proportions of access, alongside the rate of access, are presented below:
+
+`r knitr::kable(frequency_and_proportion_table, format = "markdown")`
