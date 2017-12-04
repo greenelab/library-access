@@ -6,22 +6,19 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-library('ggplot2')
-
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(include = FALSE)
 knitr::opts_chunk$set(results = "asis")
+knitr::opts_chunk$set(cache = TRUE)
 ```
 
 ```{r settings}
-lzma_compressed_library_access_tsv_location <- "library-access/data/library_coverage_xml_and_fulltext_indicators.tsv.xz"
+lzma_compressed_library_access_tsv_location <- "data/library_coverage_xml_and_fulltext_indicators.tsv.xz"
 
 original_dataset_with_oa_color_column_location <- paste0(
   'https://github.com/greenelab/scihub/raw/',
   '4172526ac7433357b31790578ad6f59948b6db26/data/',
   'state-of-oa-dois.tsv.xz')
-
-original_dataset_with_oa_color_column_location <- "/home/jacoblevernier/Downloads/state-of-oa-dois.tsv.xz"
 ```
 
 
@@ -72,9 +69,12 @@ merged_datasets_without_doi_column <- merged_datasets[
 frequency_table_by_oa_color <- table(merged_datasets_without_doi_column)
 # View(frequency_table_by_oa_color)
 
-proportion_table_by_oa_color <- prop.table(
-  frequency_table_by_oa_color,
-  margin = 1)*100
+proportion_table_by_oa_color <- round(
+  prop.table(
+    frequency_table_by_oa_color,
+    margin = 1)*100,
+  digits = 2
+)
 
 frequency_and_proportion_table <- data.frame(
   "oa_doi_color" = rownames(proportion_table_by_oa_color),
@@ -82,39 +82,12 @@ frequency_and_proportion_table <- data.frame(
   "yes_access_percent" = proportion_table_by_oa_color[,2],
   "yes_access_rate" = frequency_table_by_oa_color[, 2]
 )
-rownames(frequency_and_proportion_table) <- NA
+rownames(frequency_and_proportion_table) <- NULL
 # View(frequency_and_proportion_table)
-
-frequency_bar_chart <- ggplot(
-  data = merged_datasets_without_doi_column,
-  aes(x = oadoi_color, fill = factor(full_text_indicator))
-) +
-geom_bar(stat = "count", position = position_dodge()) +
-geom_text(aes(label=y), vjust=0) +
-xlab("OA Color") +
-ylab("Count") +
-labs(fill = "Full-Text Status") +
-theme_classic() +
-theme(axis.text.x = element_text(angle = 90)) +
-coord_flip()
 ```
 
-The dataset contained 
+We queried `r nrow(merged_datasets)` DOIs of the the `r nrow(original_dataset_with_oa_color_column)` listed in the original State of OA dataset. Queried DOIs included the following OA "colors:" `r paste(unique(merged_datasets$oadoi_color), collapse = ", ")`.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+The proportions of access, alongside the rate of access, are presented below:
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+`r knitr::kable(frequency_and_proportion_table, format = "pandoc")`
