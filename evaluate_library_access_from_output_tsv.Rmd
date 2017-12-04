@@ -90,4 +90,4 @@ We queried `r nrow(merged_datasets)` DOIs of the the `r nrow(original_dataset_wi
 
 The proportions of access, alongside the rate of access, are presented below:
 
-`r knitr::kable(frequency_and_proportion_table, format = "pandoc")`
+`r knitr::kable(frequency_and_proportion_table, format = "markdown")`
