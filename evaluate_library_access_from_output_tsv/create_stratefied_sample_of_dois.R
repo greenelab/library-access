@@ -21,7 +21,7 @@ output_tsv_location <- file.path(
   'stratefied_sample_of_dois_and_manual_full_text_check_results.tsv'
 )
 
-set.seed(3)
+set.seed(3)  # Ensure that random sampling will always return the same result.
 
 #### Read and merge datasets ####
 
