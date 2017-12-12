@@ -1,6 +1,6 @@
 #### Load libraries ####
 
-library('splitstackshape')
+library('dplyr')
 
 #### Settings ####
 
@@ -21,7 +21,7 @@ output_tsv_location <- file.path(
   'stratefied_sample_of_dois_and_manual_full_text_check_results.tsv'
 )
 
-set.seed(3)  # Ensure that random sampling will always return the same result.
+randomizer_seed_to_set <- 3  # Ensure that random sampling will always return the same result.
 
 #### Read and merge datasets ####
 
@@ -40,17 +40,18 @@ merged_datasets <- read_and_merge_library_access_datasets(
   original_dataset_with_oa_color_column_location
 )
 
+# Convert variables to factors:
+merged_datasets$oadoi_color <- factor(merged_datasets$oadoi_color)
+merged_datasets$full_text_indicator <- factor(
+  merged_datasets$full_text_indicator
+)
+
 #### Create stratefied sample within full_text_access and oadoi_color ####
 
-stratefied_sample <- stratified(
-  merged_datasets,
-  group = c(
-    'full_text_indicator',
-    'oadoi_color'
-  ),
-  size = sample_size_per_cell
-)
-# View(stratefied_sample)  # Check our work
+set.seed(randomizer_seed_to_set)
+stratefied_sample <- merged_datasets %>%
+  group_by(full_text_indicator, oadoi_color) %>%
+  sample_n(sample_size_per_cell)
 
 #### Add columns to fill in manually to the stratefied sample dataframe ####
 
