@@ -14,7 +14,8 @@ original_dataset_with_oa_color_column_location <- paste0(
   'state-of-oa-dois.tsv.xz'
 )
 
-sample_size_per_cell <- 10
+sample_size_per_cell <- 20  # This will be for each cell, multiplied by 
+# 2 full_text_indicator status * 5 OA "colors"
 
 output_tsv_location <- file.path(
   'evaluate_library_access_from_output_tsv',
