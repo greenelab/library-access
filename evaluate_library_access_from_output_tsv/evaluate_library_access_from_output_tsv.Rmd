@@ -5,25 +5,33 @@ date: "2017"
 output: pdf_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(include = FALSE)
-knitr::opts_chunk$set(results = "asis")
-knitr::opts_chunk$set(cache = TRUE)
-```
-
-```{r settings}
-lzma_compressed_library_access_tsv_location <- "data/library_coverage_xml_and_fulltext_indicators.tsv.xz"
+```{r settings, include = FALSE}
+lzma_compressed_library_access_tsv_location <- file.path(
+  'data', 'library_coverage_xml_and_fulltext_indicators.tsv.xz'
+)
 
 original_dataset_with_oa_color_column_location <- paste0(
   'https://github.com/greenelab/scihub/raw/',
   '4172526ac7433357b31790578ad6f59948b6db26/data/',
-  'state-of-oa-dois.tsv.xz')
+  'state-of-oa-dois.tsv.xz'
+)
+
+repository_root_directory <- '..'  # This sets the Working Directory that knitr uses when knitting this document back to the top directory of this repository.
 ```
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(include = FALSE)
+knitr::opts_chunk$set(results = "asis")
+knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_knit$set(root.dir = repository_root_directory)
+```
 
 ```{r read and merge datasets}
-source('read_and_merge_library_access_datasets.R')
+source(file.path(
+  'evaluate_library_access_from_output_tsv',
+  'read_and_merge_library_access_datasets.R'
+))
 
 # The function below will return a merged dataset, but will *also* add the following datasets to our global environment:
 # original_dataset_with_oa_color_column
