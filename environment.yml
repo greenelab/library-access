@@ -9,6 +9,12 @@ dependencies:
 - anaconda::pytest=3.2.1
 - anaconda::python=3.6.1
 - anaconda::r-base=3.4.1
+- anaconda::r-dplyr=0.7.0
+- anaconda::r-ggplot2=2.2.1
+- anaconda::r-knitr=1.16
+- anaconda::r-markdown=0.8
+- anaconda::r-readr=1.1.1
+- anaconda::r-rmarkdown=1.5
 - anaconda::requests=2.14.2
 - anaconda::spyder=3.1.4
 - anaconda::sqlalchemy=1.1.9
