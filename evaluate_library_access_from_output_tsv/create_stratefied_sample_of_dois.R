@@ -64,10 +64,8 @@ stratefied_sample$full_text_indicator_manual <- NA
 
 #### Write the output to a TSV ####
 
-write.table(
+readr::write_tsv(
   stratefied_sample,
-  file = output_tsv_location,
-  sep = '\t',
-  na = '',
-  row.names = FALSE
+  output_tsv_location,
+  na = ''
 )
