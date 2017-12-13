@@ -15,8 +15,8 @@ original_dataset_with_oa_color_column_location <- paste0(
   'state-of-oa-dois.tsv.xz'
 )
 
-sample_size_per_cell <- 20  # This will be for each cell, multiplied by 
-# 2 full_text_indicator status * 5 OA "colors"
+sample_size_per_cell <- 100  # This will be for each cell, multiplied by 
+# 2 full_text_indicator status
 
 output_tsv_location <- file.path(
   'evaluate_library_access_from_output_tsv',
@@ -52,7 +52,7 @@ merged_datasets$full_text_indicator <- factor(
 
 set.seed(randomizer_seed_to_set)
 stratefied_sample <- merged_datasets %>%
-  dplyr::group_by(full_text_indicator, oadoi_color) %>%
+  dplyr::group_by(full_text_indicator) %>%
   dplyr::sample_n(sample_size_per_cell)
 
 #### Add columns to fill in manually to the stratefied sample dataframe ####
