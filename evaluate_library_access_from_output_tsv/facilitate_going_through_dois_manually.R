@@ -2,7 +2,7 @@
 
 manual_tsv_location <- file.path(
   'evaluate_library_access_from_output_tsv',
-  'stratefied_sample_of_dois_and_manual_full_text_check_results.tsv'
+  'manual-doi-checks.tsv'
 )
 
 #### Open the tsv ####

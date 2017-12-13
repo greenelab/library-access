@@ -20,7 +20,7 @@ sample_size_per_cell <- 20  # This will be for each cell, multiplied by
 
 output_tsv_location <- file.path(
   'evaluate_library_access_from_output_tsv',
-  'stratefied_sample_of_dois_and_manual_full_text_check_results.tsv'
+  'manual-doi-checks.tsv'
 )
 
 randomizer_seed_to_set <- 3  # Ensure that random sampling will always return the same result.
