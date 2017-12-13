@@ -1,6 +1,7 @@
-#### Load libraries ####
+#### Load dependencies ####
 
-library('dplyr')
+# Load magrittr pipe
+`%>%` = dplyr::`%>%`
 
 #### Settings ####
 
@@ -51,8 +52,8 @@ merged_datasets$full_text_indicator <- factor(
 
 set.seed(randomizer_seed_to_set)
 stratefied_sample <- merged_datasets %>%
-  group_by(full_text_indicator, oadoi_color) %>%
-  sample_n(sample_size_per_cell)
+  dplyr::group_by(full_text_indicator, oadoi_color) %>%
+  dplyr::sample_n(sample_size_per_cell)
 
 #### Add columns to fill in manually to the stratefied sample dataframe ####
 
