@@ -59,8 +59,10 @@ stratefied_sample <- merged_datasets %>%
 
 colnames(stratefied_sample)[3] <- 'full_text_indicator_automated'
 
-stratefied_sample$date_of_manual_full_text_check <- NA
-stratefied_sample$full_text_indicator_manual <- NA
+stratefied_sample <- stratefied_sample %>% dplyr::mutate(
+  date_of_manual_full_text_check = NA,
+  full_text_indicator_manual = NA
+)
 
 #### Write the output to a TSV ####
 
