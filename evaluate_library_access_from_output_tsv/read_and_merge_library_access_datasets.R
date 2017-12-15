@@ -6,8 +6,10 @@ read_and_merge_library_access_datasets <- function(
 ){
   # '<<-' at several places below will add the variable into our global scope,
   # beyond this function.
-  lzma_compressed_library_access_tsv <<- readr::read_tsv(
-    lzma_compressed_library_access_tsv_location
+  lzma_compressed_library_access_tsv <<- read.table(
+    gzfile(lzma_compressed_library_access_tsv_location),
+    sep = '\t',
+    header = TRUE
   )
   # View(lzma_compressed_library_access_tsv)  # Check the dataset
   
