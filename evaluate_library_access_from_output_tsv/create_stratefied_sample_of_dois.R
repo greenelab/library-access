@@ -23,7 +23,7 @@ randomizer_seed_to_set <- 3  # Ensure that random sampling will always return
 # Read the dataset -------------------------------------------------------------
 
 library_access_data <- readr::read_tsv(
-  gzfile(lzma_compressed_library_access_data_location),
+  lzma_compressed_library_access_data_location
 )
 # View(lzma_compressed_library_access_data)  # Check the dataset
 
