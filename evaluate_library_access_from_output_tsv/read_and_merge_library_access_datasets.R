@@ -1,4 +1,4 @@
-#### Read the datasets ####
+# Read the datasets -------------------------------------------------------
 
 read_and_merge_library_access_datasets <- function(
   lzma_compressed_library_access_tsv_location,
@@ -30,7 +30,7 @@ read_and_merge_library_access_datasets <- function(
   )
   # View(original_dataset_with_oa_color_column)  # Check the dataset
   
-  #### Merge the datasets ####
+  # Merge the datasets ---------------------------------------------------------
   
   # Combine the datasets so that we have doi, full_text_indicator,
   # and oadoi_color

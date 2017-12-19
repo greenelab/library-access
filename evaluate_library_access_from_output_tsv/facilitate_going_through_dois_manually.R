@@ -1,11 +1,11 @@
-#### Settings ####
+# Settings ---------------------------------------------------------------------
 
 manual_tsv_location <- file.path(
   'evaluate_library_access_from_output_tsv',
   'manual-doi-checks.tsv'
 )
 
-#### Open the tsv ####
+# Open the tsv -----------------------------------------------------------------
 
 dataset_to_go_through <- read.table(
   manual_tsv_location,
@@ -16,7 +16,7 @@ dataset_to_go_through <- read.table(
 )
 # View(dataset_to_go_through)
 
-#### Facilitate going through the rows that haven't been filled in ####
+# Facilitate going through the rows that haven't been filled in ----------------
 
 for (row_number in 
   which(
