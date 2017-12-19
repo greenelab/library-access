@@ -7,22 +7,17 @@ manual_tsv_location <- file.path(
 
 # Open the tsv -----------------------------------------------------------------
 
-dataset_to_go_through <- read.table(
+dataset_to_go_through <- readr::read_tsv(
   manual_tsv_location,
-  sep = '\t',
-  na.strings = '',
-  header = TRUE,
-  colClasses = 'character'
+  na = ''
 )
 # View(dataset_to_go_through)
 
 # Facilitate going through the rows that haven't been filled in ----------------
 
-for (row_number in 
-  which(
-    is.na(dataset_to_go_through$full_text_indicator_manual)
-  )
-) {
+for (row_number in which(
+  is.na(dataset_to_go_through$full_text_indicator_manual)
+)) {
   doi_for_row <- dataset_to_go_through$doi[row_number]
   
   url_to_visit <- paste0(

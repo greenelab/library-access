@@ -57,7 +57,7 @@ original_dataset_with_oa_color_column <- read.table(
 
 # Combine the datasets so that we have doi, full_text_indicator,
 # and oadoi_color
-merged_datasets <- merge(
+merged_datasets <- dplyr::inner_join(
   original_dataset_with_oa_color_column,
   lzma_compressed_library_access_tsv,
   by = "doi"
