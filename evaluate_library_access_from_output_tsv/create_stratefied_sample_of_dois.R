@@ -41,8 +41,10 @@ stratefied_sample <- library_access_data %>%
   # Add columns to fill in manually to the stratefied sample dataframe:
   dplyr::rename('full_text_indicator_automated' = 'full_text_indicator') %>%
   dplyr::mutate(
-    date_of_manual_full_text_check = NA,
-    full_text_indicator_manual = NA
+    date_of_manual_full_text_check_inside_campus = NA,
+    full_text_indicator_manual_inside_campus = NA,
+    date_of_manual_full_text_check_outside_campus = NA,
+    full_text_indicator_manual_outside_campus = NA
   )
 
 # Write the output to a TSV ----------------------------------------------------
