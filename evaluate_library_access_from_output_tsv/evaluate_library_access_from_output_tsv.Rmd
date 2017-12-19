@@ -29,20 +29,40 @@ knitr::opts_knit$set(root.dir = repository_root_directory)
 ```
 
 ```{r read and merge datasets}
-source(file.path(
-  'evaluate_library_access_from_output_tsv',
-  'read_and_merge_library_access_datasets.R'
-))
-
-# The function below will return a merged dataset, but will *also* add the
-# following datasets to our global environment:
-# original_dataset_with_oa_color_column
-# lzma_compressed_library_access_tsv
-
-merged_datasets <- read_and_merge_library_access_datasets(
-  lzma_compressed_library_access_tsv_location,
-  original_dataset_with_oa_color_column_location
+lzma_compressed_library_access_tsv <- read.table(
+  gzfile(lzma_compressed_library_access_tsv_location),
+  sep = '\t',
+  header = TRUE
 )
+# View(lzma_compressed_library_access_tsv)  # Check the dataset
+
+# Create a temporary filepath for downloading the original dataset.
+# Then download and read it.
+tmp_filpath_for_original_dataset <- tempfile()
+
+download.file(
+  original_dataset_with_oa_color_column_location,
+  destfile = tmp_filpath_for_original_dataset,
+  mode = 'wb'
+)
+
+original_dataset_with_oa_color_column <- read.table(
+  gzfile(tmp_filpath_for_original_dataset),
+  sep = '\t',
+  header = TRUE
+)
+# View(original_dataset_with_oa_color_column)  # Check the dataset
+
+# Merge the datasets ---------------------------------------------------------
+
+# Combine the datasets so that we have doi, full_text_indicator,
+# and oadoi_color
+merged_datasets <- merge(
+  original_dataset_with_oa_color_column,
+  lzma_compressed_library_access_tsv,
+  by = "doi"
+)
+# View(merged_datasets)  # Check our work
 ```
 
 ## Summary of the downloaded dataset

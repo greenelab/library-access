@@ -5,14 +5,8 @@
 
 # Settings ---------------------------------------------------------------------
 
-lzma_compressed_library_access_tsv_location <- file.path(
+lzma_compressed_library_access_data_location <- file.path(
   'data', 'library_coverage_xml_and_fulltext_indicators.tsv.xz'
-)
-
-original_dataset_with_oa_color_column_location <- paste0(
-  'https://github.com/greenelab/scihub/raw/',
-  '4172526ac7433357b31790578ad6f59948b6db26/data/',
-  'state-of-oa-dois.tsv.xz'
 )
 
 sample_size_per_cell <- 100  # This will be for each cell, multiplied by 
@@ -26,33 +20,24 @@ output_tsv_location <- file.path(
 randomizer_seed_to_set <- 3  # Ensure that random sampling will always return
 # the same result.
 
-# Read and merge datasets ------------------------------------------------------
+# Read the dataset -------------------------------------------------------------
 
-source(file.path(
-  'evaluate_library_access_from_output_tsv',
-  'read_and_merge_library_access_datasets.R'
-))
-
-# The function below will return a merged dataset, but will *also* add the
-# following datasets to our global environment:
-  # original_dataset_with_oa_color_column
-  # lzma_compressed_library_access_tsv
-
-merged_datasets <- read_and_merge_library_access_datasets(
-  lzma_compressed_library_access_tsv_location,
-  original_dataset_with_oa_color_column_location
+library_access_data <- read.table(
+  gzfile(lzma_compressed_library_access_data_location),
+  sep = '\t',
+  header = TRUE
 )
+# View(lzma_compressed_library_access_data)  # Check the dataset
 
-# Convert variables to factors:
-merged_datasets$oadoi_color <- factor(merged_datasets$oadoi_color)
-merged_datasets$full_text_indicator <- factor(
-  merged_datasets$full_text_indicator
+# Convert variable to factor:
+library_access_data <- library_access_data %>% dplyr::mutate(
+  full_text_indicator = as.factor(full_text_indicator)
 )
 
 # Create stratefied sample, and clean up the tibble ----------------------------
 
 set.seed(randomizer_seed_to_set)
-stratefied_sample <- merged_datasets %>%
+stratefied_sample <- library_access_data %>%
   dplyr::group_by(full_text_indicator) %>%
   dplyr::sample_n(sample_size_per_cell) %>%
   # Add columns to fill in manually to the stratefied sample dataframe:
