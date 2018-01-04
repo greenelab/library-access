@@ -82,12 +82,10 @@ facilitate_going_through_dois <- function(
     }
     
     # Save the changes to the tsv:
-    write.table(
+    readr::write_tsv(
       dataset_to_go_through,
-      file = manual_tsv_location,
-      sep = '\t',
-      na = '',
-      row.names = FALSE
+      manual_tsv_location,
+      na = ''
     )
   }
 }
