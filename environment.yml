@@ -1,6 +1,7 @@
 name: library-access
 dependencies:
 - anaconda::beautifulsoup4=4.6.0
+- anaconda::ipykernel=4.7.0
 - anaconda::ipython=5.3.0
 - anaconda::lxml=4.1.0
 - anaconda::pandas=0.20.1
