@@ -1,7 +1,7 @@
 facilitate_going_through_dois <- function(
   manual_tsv_location = file.path(
     'evaluate_library_access_from_output_tsv',
-    'manual-doi-checks.tsv'
+    'manual-doi-checks-500.tsv'
   )){
   # Open the tsv -----------------------------------------------------------------
   
@@ -24,11 +24,11 @@ facilitate_going_through_dois <- function(
       tolower(user_location_input) == 'n'
     ) {
       if (tolower(user_location_input) == 'y') {
-        column_for_data_entry <- 'full_text_indicator_manual_inside_campus'
-        column_for_date <- 'date_of_manual_full_text_check_inside_campus'
+        column_for_data_entry <- 'penn_access'
+        column_for_date <- 'penn_access_date'
       } else {
-        column_for_data_entry <- 'full_text_indicator_manual_outside_campus'
-        column_for_date <- 'date_of_manual_full_text_check_outside_campus'
+        column_for_data_entry <- 'open_access'
+        column_for_date <- 'open_access_date'
       }
       
       break  # Break out of the loop, and move on.
