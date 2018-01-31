@@ -20,6 +20,7 @@ dependencies:
 - anaconda::spyder=3.1.4
 - anaconda::sqlalchemy=1.1.9
 - anaconda::sqlite=3.13.0
+- anaconda::statsmodels=0.8.0
 - anaconda::yaml=0.1.6
 - pip:
   - backoff==1.4.3
