@@ -6,6 +6,8 @@ This repository is cataloging University Library access to scholarly literature.
 Scholarly articles are identified using their DOIs.
 The impetus for this project was [this discussion](https://github.com/greenelab/scihub-manuscript/issues/21 "Potential followup: comparison to authorized access") on the Sci-Hub Coverage Study.
 
+The code in this repository facilitates fetching indicators of full-text availability for a list of DOIs from an OpenURL resolver. In this way, it enables large-scale analysis of bibliographic holdings / availability.
+
 ## Using the Code
 
 **The code files in this repository assume that your working directory is set to the top-level directory of this repository.**
@@ -26,7 +28,7 @@ The impetus for this project was [this discussion](https://github.com/greenelab/
 	- `penntext-accuracy-200.ipynb`
 	- `penntext-accuracy-500.ipynb`
 
-- `data`:
+- `data`: \[This is where datasets will be saved by the above scripts.\]
 
 ### Environment
 
