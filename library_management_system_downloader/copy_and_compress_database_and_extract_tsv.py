@@ -16,9 +16,9 @@ from sqlalchemy.orm import sessionmaker
 # Settings
 # =============================================================================
 
-sqlite_database_location = 'library_coverage_xml_and_fulltext_indicators.db'
-
 data_directory = 'data'
+
+sqlite_database_location = f'{data_directory}/library_coverage_xml_and_fulltext_indicators.db'
 
 compressed_database_copy_name = (
         'library_coverage_xml_and_fulltext_indicators'
