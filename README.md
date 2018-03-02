@@ -18,15 +18,15 @@ The code in this repository facilitates fetching indicators of full-text availab
 - `environment.yml`: Conda environment file (see [Environment](#environment) below).
 - `.gitattributes`: File with information for tracking files using [Git Large File Storage (LFS)](https://git-lfs.github.com/).
 - `library_management_system_downloader` contains the following scripts, to be used in the following order:
-	- `downloader_configuration_file_TEMPLATE.py` should be copied to `downloader_configuration_file.py` and edited for your own institution's OpenURL resolver (These scripts were specifically tested using the OpenURL resolver that comes with Ex Libris' Alma management software).
-	- `run_api_download_and_parse_results.py`
-	- `copy_and_compress_database_and_extract_tsv.py`
+	1. `downloader_configuration_file_TEMPLATE.py` should be copied to `downloader_configuration_file.py` and edited for your own institution's OpenURL resolver (These scripts were specifically tested using the OpenURL resolver that comes with Ex Libris' Alma management software).
+	1. `run_api_download_and_parse_results.py`
+	1. `copy_and_compress_database_and_extract_tsv.py`
 - `evaluate_library_access_from_output_tsv` contains the following scripts, to be used in the following order:
-	- `create_stratefied_sample_of_dois.R`
-	- `join_doi-200_dates_to_doi-500.R`
-	- \[Run `facilitate_going_through_dois_manually.R` to help fill in the `.tsv` files created by the scripts above\]
-	- `penntext-accuracy-200.ipynb`
-	- `penntext-accuracy-500.ipynb`
+	1. `create_stratefied_sample_of_dois.R`
+	1. `join_doi-200_dates_to_doi-500.R`
+	1. \[Run `facilitate_going_through_dois_manually.R` to help fill in the `.tsv` files created by the scripts above\]
+	1. `penntext-accuracy-200.ipynb`
+	1. `penntext-accuracy-500.ipynb`
 
 - `data`: \[This is where datasets will be saved by the above scripts.\]
 
