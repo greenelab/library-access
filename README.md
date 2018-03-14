@@ -19,6 +19,8 @@ The code in this repository facilitates fetching indicators of full-text availab
 - `.gitattributes`: File with information for tracking files using [Git Large File Storage (LFS)](https://git-lfs.github.com/).
 - `library_management_system_downloader` contains the following scripts, to be used in the following order:
 	1. `downloader_configuration_file_TEMPLATE.py` should be copied to `downloader_configuration_file.py` and edited for your own institution's OpenURL resolver (These scripts were specifically tested using the OpenURL resolver that comes with Ex Libris' Alma management software).
+		- Within `downloader_configuration_file.py`, the variable `api_base_url` will be based on the OpenURL resolver / vendor that your institution uses, and thus will be different from institution to institution. To find out what that base URL should be, it may be necessary to ask your local library technology team for help and/or documentation.
+		- It is additionally the case that different OpenURL resolvers may return slightly different formats of data. Thus, it may be necessary to modify the function `fulltext_indication` in the file `evaluate_api_response_for_fulltext_indication.py` to look for an XML field that the data from your institution's OpenURL resolver contains.
 	1. `run_api_download_and_parse_results.py`
 	1. `copy_and_compress_database_and_extract_tsv.py`
 - `evaluate_library_access_from_output_tsv` contains the following scripts, to be used in the following order:
