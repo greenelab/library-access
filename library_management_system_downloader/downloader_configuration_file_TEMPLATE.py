@@ -25,7 +25,7 @@ input_tsv_dataset_location = (
 
 rerun_dois_that_are_already_in_database = False
 
-oadoi_values_to_limit_search_to = ['closed']  # This can be, e.g.,
+oadoi_values_to_limit_search_to = ['closed', 'hybrid', 'green', 'gold', 'bronze']  # This can be, e.g.,
 # "['closed', 'gold']", etc.
 
 record_numbers_to_download = None  # This can be, e.g., slice(1, 10, 1) to
